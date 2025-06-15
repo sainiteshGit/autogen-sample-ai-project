@@ -1,20 +1,20 @@
 import asyncio
-from teams import get_customer_support_team
+from teams import get_healthcare_team
 
 async def main(query: str):
     """
-    Handles a customer support query asynchronously by delegating the task to the customer support team,
+    Handles a healthcare emergency scenario asynchronously by delegating the task to the healthcare MAS team,
     retrieving the latest response, and processing the result. If the response ends with "TERMINATE",
     the suffix is removed and the result is stripped of leading/trailing whitespace.
     
     Args:
-        query (str): The customer support query to be processed.
+        query (str): The healthcare scenario query to be processed.
         
     Returns:
-        str: The processed response from the customer support team.
+        str: The processed response from the healthcare MAS team.
     """
-    customer_support_team = get_customer_support_team()
-    response = await customer_support_team.run(task=query)
+    healthcare_team = get_healthcare_team()
+    response = await healthcare_team.run(task=query)
     result = response.messages[-1].content
 
     if result.endswith("TERMINATE"):
@@ -23,7 +23,6 @@ async def main(query: str):
     return result
 
 if __name__ == "__main__":
-    query = "What is the price of Apple iPhone 15 Pro?"
+    query = "Patients with heart conditions."
     response = asyncio.run(main(query))
-
     print(response)

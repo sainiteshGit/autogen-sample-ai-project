@@ -1,74 +1,37 @@
-from db import PRODUCT_CATALOG, ORDERS_DB, COMPLAINTS_DB
+from db import PATIENT_VITALS_DB, EMERGENCY_EVENTS_DB, MEDICATION_INVENTORY, INSURANCE_DB
 
-def find_closest_product(product_name: str) -> str:
-    """Find the closest matching product from the catalog based on substring search."""
-    for product in PRODUCT_CATALOG.keys():
-        if product_name.lower() in product.lower():
-            return product
+# --- Healthcare MAS Tools ---
 
-    return None
+def monitoring_diagnosis_tool(patient_id: str) -> str:
+    """Monitor patient vitals and flag emergencies."""
+    patient = PATIENT_VITALS_DB.get(patient_id)
+    if not patient:
+        return f"Patient {patient_id} not found."
+    # Simulate detection logic
+    if patient["heart_rate"] > 110 and patient["spo2"] < 90:
+        EMERGENCY_EVENTS_DB.append({"patient_id": patient_id, "event": "Possible cardiac arrest"})
+        return f"ALERT: Possible cardiac arrest detected for patient {patient_id}. Notify Response Coordination Agent."
+    return f"Vitals normal for patient {patient_id}."
 
-# Product inquiry tool
+def response_coordination_tool(patient_id: str) -> str:
+    """Coordinate emergency response for a patient."""
+    # Simulate alerting, ICU bed allocation, and transport
+    EMERGENCY_EVENTS_DB.append({"patient_id": patient_id, "event": "Response team alerted, ICU bed secured, transport dispatched"})
+    return f"Response team alerted, ICU bed secured, and emergency transport dispatched for patient {patient_id}."
 
+def medical_support_tool(patient_id: str) -> str:
+    """Prepare medications, supplies, and share patient history."""
+    patient = PATIENT_VITALS_DB.get(patient_id)
+    if not patient:
+        return f"Patient {patient_id} not found."
+    # Simulate medication preparation
+    meds_prepared = [med for med, qty in MEDICATION_INVENTORY.items() if qty > 0]
+    return f"Prepared medications: {', '.join(meds_prepared)}. Shared history: {patient['history']} with doctors."
 
-def product_inquiry_tool(product_name: str) -> str:
-    """Check product information using product name"""
-    closest_product = find_closest_product(product_name)
-
-    if closest_product:
-        product = PRODUCT_CATALOG[closest_product]
-        return f"{closest_product}: Price = ${product['price']}, Stock = {product['stock']} units."
-
-    return f"Sorry, {product_name} is not available in our catalog."
-
-# Order placement tool
-
-
-def order_placement_tool(product_name: str, quantity: int = None, customer_id: str = "Guest") -> str:
-    """Place order"""
-    closest_product = find_closest_product(product_name)
-
-    if not closest_product:
-        return f"Sorry, {product_name} is not available."
-
-    if quantity is None:
-        return "MISSING_INFO: Please provide the quantity to place your order."
-
-    product = PRODUCT_CATALOG[closest_product]
-
-    if product["stock"] < quantity:
-        return f"Only {product['stock']} units of {closest_product} are available."
-
-    # Deduct stock and generate order ID
-    product["stock"] -= quantity
-    order_id = f"ORD-{len(ORDERS_DB) + 1}"
-    ORDERS_DB[order_id] = {"product": closest_product, "quantity": quantity,
-                           "customer_id": customer_id, "status": "Processing"}
-
-    return f"Order placed successfully! Order ID: {order_id}"
-
-# Order status tool
-
-
-def order_status_tool(order_id: str) -> str:
-    """Check order status"""
-    order = ORDERS_DB.get(order_id)
-
-    if order:
-        return f"Order ID: {order_id}, Product: {order['product']}, Quantity: {order['quantity']}, Status: {order['status']}."
-
-    return "Invalid Order ID."
-
-# Complaint registration tool
-
-
-def complaint_registration_tool(order_id: str, complaint_text: str, customer_id: str = "Guest") -> str:
-    """Register complaint"""
-    if order_id not in ORDERS_DB:
-        return "Invalid Order ID. Cannot register complaint."
-
-    complaint_id = f"CMP-{len(COMPLAINTS_DB) + 1}"
-    COMPLAINTS_DB[complaint_id] = {
-        "order_id": order_id, "customer_id": customer_id, "complaint": complaint_text, "status": "Pending"}
-
-    return f"Complaint registered successfully! Complaint ID: {complaint_id}"
+def administration_billing_tool(patient_id: str) -> str:
+    """Contact insurance for emergency approval and coverage."""
+    insurance = INSURANCE_DB.get(patient_id)
+    if not insurance:
+        return f"No insurance record for patient {patient_id}."
+    insurance["pre_auth"] = True
+    return f"Insurance provider {insurance['provider']} contacted. Emergency approval and coverage confirmed for patient {patient_id}."

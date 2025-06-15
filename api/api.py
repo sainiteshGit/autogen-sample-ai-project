@@ -13,7 +13,7 @@ class QueryRequest(BaseModel):
 
 @app.post("/chat")
 async def chat(request: QueryRequest):
-    """Handle customer support queries."""
+    """Handle healthcare MAS queries."""
     response = await handle_query(request.query)
 
     return {"response": response}

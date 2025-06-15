@@ -1,19 +1,25 @@
-PRODUCT_CATALOG = {
-    "Dell XPS 15": {"price": 1500, "stock": 10},
-    "Apple iPhone 15 Pro": {"price": 1200, "stock": 15},
-    "Sony WH-1000XM5 Headphones": {"price": 350, "stock": 20},
-    "Samsung Galaxy Tab S9": {"price": 900, "stock": 12},
-    "Logitech MX Master 3S Mouse": {"price": 100, "stock": 30},
+# --- Healthcare MAS Data Structures ---
+# Patient vitals database (simulated, keyed by patient_id)
+PATIENT_VITALS_DB = {
+    "PAT-001": {"age": 72, "heart_rate": 120, "spo2": 85, "history": ["hypertension"]},
+    "PAT-002": {"age": 65, "heart_rate": 80, "spo2": 95, "history": ["diabetes"]},
+    "PAT-003": {"age": 50, "heart_rate": 75, "spo2": 98, "history": []},
+    "PAT-004": {"age": 80, "heart_rate": 130, "spo2": 88, "history": ["COPD"]},
+    "PAT-005": {"age": 45, "heart_rate": 70, "spo2": 97, "history": []},
+    "PAT-006": {"age": 60, "heart_rate": 110, "spo2": 92, "history": ["asthma"]},
 }
 
-# Sample order database
-ORDERS_DB = {
-    "ORD-1": {"product": "Dell XPS 15", "quantity": 1, "customer_id": "CUST-001", "status": "Shipped"},
-    "ORD-2": {"product": "Apple iPhone 15 Pro", "quantity": 2, "customer_id": "CUST-002", "status": "Processing"},
+# Emergency events log
+EMERGENCY_EVENTS_DB = []
+
+# Medication and supplies inventory
+MEDICATION_INVENTORY = {
+    "epinephrine": 10,
+    "aspirin": 20,
+    "oxygen": 5,
 }
 
-# Sample complaint database
-COMPLAINTS_DB = {
-    "CMP-1": {"order_id": "ORD-1", "customer_id": "CUST-001", "complaint": "Received a defective product.", "status": "Resolved"},
-    "CMP-2": {"order_id": "ORD-2", "customer_id": "CUST-002", "complaint": "Order delayed.", "status": "Pending"},
+# Insurance/pre-authorization status
+INSURANCE_DB = {
+    "PAT-001": {"provider": "HealthSecure", "pre_auth": False, "coverage": True},
 }

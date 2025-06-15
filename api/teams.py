@@ -3,8 +3,13 @@ from autogen_agentchat.teams import SelectorGroupChat
 from autogen_agentchat.messages import AgentEvent, ChatMessage
 from typing import Sequence
 from azureaimodels import get_model_client
-from agents import get_planning_agent, get_response_agent, get_order_placement_agent, \
-    get_order_status_agent, get_complaint_registration_agent, get_product_inquiry_agent
+from agents import (
+    get_monitoring_diagnosis_agent,
+    get_response_coordination_agent,
+    get_medical_support_agent,
+    get_administration_billing_agent,
+    get_planning_agent,    
+)
 
 
 def custom_selector_func(messages: Sequence[AgentEvent | ChatMessage]) -> str:
@@ -25,20 +30,19 @@ def get_termination_conditions():
 
     return combined_conditions
 
-planner = get_planning_agent()
-responder = get_response_agent()
-order_placement_provider = get_order_placement_agent()
-order_status_provider = get_order_status_agent()
-complaint_registrar = get_complaint_registration_agent()
-product_inquiry_provider = get_product_inquiry_agent()
-customer_support_team = SelectorGroupChat(
+monitoring_agent = get_monitoring_diagnosis_agent()
+response_agent = get_response_coordination_agent()
+medical_support_agent = get_medical_support_agent()
+admin_agent = get_administration_billing_agent()
+planning_agent = get_planning_agent()
+
+healthcare_team = SelectorGroupChat(
     [
-        planner,
-        responder,
-        order_placement_provider,
-        complaint_registrar,
-        order_status_provider,
-        product_inquiry_provider,
+        planning_agent,
+        response_agent,
+        monitoring_agent,
+        medical_support_agent,
+        admin_agent,
     ],
     selector_func=custom_selector_func,
     termination_condition=get_termination_conditions(),
@@ -46,6 +50,6 @@ customer_support_team = SelectorGroupChat(
     allow_repeated_speaker=True,
 )
 
-def get_customer_support_team() -> SelectorGroupChat:
-    """Return the customer support team chat."""
-    return customer_support_team
+def get_healthcare_team() -> SelectorGroupChat:
+    """Return the healthcare multi-agent team chat."""
+    return healthcare_team
